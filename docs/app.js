@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
 
-const store = {
+const prefs = {
   get(key, fallback = "") {
     const value = localStorage.getItem(key);
     return value === null ? fallback : value;
@@ -8,836 +8,629 @@ const store = {
   set(key, value) {
     localStorage.setItem(key, value);
   },
-  remove(key) {
-    localStorage.removeItem(key);
-  },
-};
-
-const i18n = {
-  sv: {
-    title: "Dart Counter",
-    subtitle:
-      "Ange din kroppsvikt och dina personliga rekord (1RM eller reps) för att få nivåer och färgkodad feedback.",
-    labelLanguage: "Språk",
-    labelGender: "Kön",
-    labelBodyweight: "Kroppsvikt (kg)",
-    labelSquat: "Knäböj 1RM (kg)",
-    labelBench: "Bänkpress 1RM (kg)",
-    labelClean: "Frivändning 1RM (kg)",
-    labelChins: "Chins (max reps)",
-    labelBrutal: "Brutalbänk (max reps)",
-    labelDips: "Dips (max reps)",
-    labelCooper: "Cooper (min)",
-    promptBodyweight: "t.ex. 82,5",
-    promptSquat: "t.ex. 140",
-    promptBench: "t.ex. 95",
-    promptClean: "t.ex. 80",
-    promptChins: "t.ex. 12",
-    promptBrutal: "t.ex. 18",
-    promptDips: "t.ex. 22",
-    btnCalculate: "Beräkna nivåer",
-    btnClear: "Rensa fält",
-    btnUndo: "Ångra rensa",
-    tabResults: "Resultat",
-    tabTable: "SHF Kravprofil",
-    tabRadar: "Spindelnät",
-    tabAll: "Mina vikt-nivåer",
-    statusFillField: "Fyll i {0}.",
-    statusInvalidNumber: "Ogiltigt tal i {0}.",
-    statusBodyweightRequired: "Ange kroppsvikt för 1RM-övningar.",
-    statusBodyweightInvalid: "Kroppsvikt måste vara större än 0.",
-    statusFillOne: "Fyll i minst en övning.",
-    statusCooperPick: "Välj både minuter och sekunder för Cooper.",
-    statusAllNeedWeight: "Ange kroppsvikt för att räkna kg-värden.",
-    placeholderResults: "Fyll i de fält du vill och tryck på Beräkna.",
-    color: {
-      red: "Röd",
-      yellow: "Gul",
-      green: "Grön",
-      blue: "Ljusblå",
-    },
-    levelMsg: {
-      1: "Måste tränas.",
-      2: "Måste tränas.",
-      3: "Hög prioritet.",
-      4: "Prioritet.",
-      5: "Kan följa ordinarie träning.",
-      6: "Medel.",
-      7: "God fysisk bas.",
-      8: "Mycket god fysisk bas.",
-      9: "Elitidrottare.",
-      10: "Olympisk nivå.",
-    },
-    exercise: {
-      squat: "Knäböj",
-      bench: "Bänkpress",
-      clean: "Frivändning",
-      chins: "Chins",
-      brutal: "Brutalbänk",
-      dips: "Dips",
-      cooper: "Cooper",
-    },
-    suffix: {
-      bw: "(x BW)",
-      reps: "(reps)",
-      min: "(min)",
-      kg: "(kg)",
-    },
-    gender: {
-      male: "Herr",
-      female: "Dam",
-    },
-    language: {
-      sv: "Svenska",
-      en: "Engelska",
-    },
-    labelLevel: "Nivå",
-    detail: {
-      ratio: "1RM {0} kg ({1} x kroppsvikt) - nivågräns {2} x BW",
-      reps: "Max {0} reps - nivågräns {1} reps",
-      time: "Tid {0} - nivågräns {1}",
-    },
-  },
-  en: {
-    title: "Dart Counter",
-    subtitle:
-      "Enter your body weight and personal records (1RM or reps) to get levels and color-coded feedback.",
-    labelLanguage: "Language",
-    labelGender: "Gender",
-    labelBodyweight: "Body weight (kg)",
-    labelSquat: "Squat 1RM (kg)",
-    labelBench: "Bench press 1RM (kg)",
-    labelClean: "Power clean 1RM (kg)",
-    labelChins: "Chins (max reps)",
-    labelBrutal: "Brutal bench (max reps)",
-    labelDips: "Dips (max reps)",
-    labelCooper: "Cooper (min)",
-    promptBodyweight: "e.g. 82.5",
-    promptSquat: "e.g. 140",
-    promptBench: "e.g. 95",
-    promptClean: "e.g. 80",
-    promptChins: "e.g. 12",
-    promptBrutal: "e.g. 18",
-    promptDips: "e.g. 22",
-    btnCalculate: "Calculate levels",
-    btnClear: "Clear fields",
-    btnUndo: "Undo clear",
-    tabResults: "Results",
-    tabTable: "SHF Requirement Profile",
-    tabRadar: "Radar",
-    tabAll: "My weight levels",
-    statusFillField: "Fill in {0}.",
-    statusInvalidNumber: "Invalid number in {0}.",
-    statusBodyweightRequired: "Enter body weight for 1RM exercises.",
-    statusBodyweightInvalid: "Body weight must be greater than 0.",
-    statusFillOne: "Fill in at least one exercise.",
-    statusCooperPick: "Select both minutes and seconds for Cooper.",
-    statusAllNeedWeight: "Enter body weight to calculate kg values.",
-    placeholderResults: "Fill in the fields you want and press Calculate.",
-    color: {
-      red: "Red",
-      yellow: "Yellow",
-      green: "Green",
-      blue: "Light blue",
-    },
-    levelMsg: {
-      1: "Must be trained.",
-      2: "Must be trained.",
-      3: "High priority.",
-      4: "Priority.",
-      5: "Can follow regular training.",
-      6: "Average.",
-      7: "Good physical base.",
-      8: "Very good physical base.",
-      9: "Elite athlete.",
-      10: "Olympic level.",
-    },
-    exercise: {
-      squat: "Squat",
-      bench: "Bench press",
-      clean: "Power clean",
-      chins: "Chins",
-      brutal: "Brutal bench",
-      dips: "Dips",
-      cooper: "Cooper",
-    },
-    suffix: {
-      bw: "(x BW)",
-      reps: "(reps)",
-      min: "(min)",
-      kg: "(kg)",
-    },
-    gender: {
-      male: "Male",
-      female: "Female",
-    },
-    language: {
-      sv: "Swedish",
-      en: "English",
-    },
-    labelLevel: "Level",
-    detail: {
-      ratio: "1RM {0} kg ({1} x bodyweight) - level threshold {2} x BW",
-      reps: "Max {0} reps - level threshold {1} reps",
-      time: "Time {0} - level threshold {1}",
-    },
-  },
 };
 
 const state = {
-  lang: store.get("lang", "sv"),
-  genderIndex: parseInt(store.get("genderIndex", "0"), 10) || 0,
-  lastCleared: null,
-  view: "results",
-  lastLevels: [],
+  view: "setup",
+  playerLibrary: [],
+  matchPlayers: [],
+  startScore: 301,
+  checkoutRule: "STRAIGHT_OUT",
+  sets: 1,
+  legs: 1,
+  mode: "FIRST_TO",
+  setsTarget: 1,
+  legsTarget: 1,
+  currentSet: 1,
+  currentLeg: 1,
+  currentPlayer: 0,
+  pendingBustClear: -1,
+  matchFinished: false,
+  selectedMultiplier: "SINGLE",
+  players: [],
+  undoStack: [],
+  status: "",
 };
 
-const EXERCISES = {
-  male: [
-    {
-      id: "squat",
-      type: "ratio",
-      levels: [1.1, 1.22, 1.33, 1.44, 1.55, 1.66, 1.77, 1.88, 1.99, 2.1],
-    },
-    {
-      id: "bench",
-      type: "ratio",
-      levels: [0.75, 0.82, 0.89, 0.96, 1.04, 1.11, 1.18, 1.25, 1.33, 1.4],
-    },
-    {
-      id: "clean",
-      type: "ratio",
-      levels: [0.75, 0.82, 0.89, 0.96, 1.04, 1.11, 1.18, 1.25, 1.33, 1.4],
-    },
-    {
-      id: "chins",
-      type: "reps",
-      levels: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
-    },
-    {
-      id: "brutal",
-      type: "reps",
-      levels: [3, 6, 9, 10, 13, 16, 20, 23, 26, 30],
-    },
-    {
-      id: "dips",
-      type: "reps",
-      levels: [3, 6, 9, 10, 13, 16, 20, 23, 26, 30],
-    },
-    {
-      id: "cooper",
-      type: "time",
-      levels: [
-        13 * 60 + 15,
-        12 * 60 + 58,
-        12 * 60 + 41,
-        12 * 60 + 24,
-        12 * 60 + 7,
-        11 * 60 + 50,
-        11 * 60 + 33,
-        11 * 60 + 17,
-        11 * 60 + 1,
-        10 * 60 + 45,
-      ],
-    },
-  ],
-  female: [
-    {
-      id: "squat",
-      type: "ratio",
-      levels: [0.75, 0.84, 0.94, 1.03, 1.13, 1.22, 1.32, 1.41, 1.51, 1.6],
-    },
-    {
-      id: "bench",
-      type: "ratio",
-      levels: [0.5, 0.58, 0.67, 0.75, 0.83, 0.92, 1.0, 1.08, 1.17, 1.25],
-    },
-    {
-      id: "clean",
-      type: "ratio",
-      levels: [0.5, 0.58, 0.67, 0.75, 0.83, 0.92, 1.0, 1.08, 1.17, 1.25],
-    },
-    {
-      id: "chins",
-      type: "reps",
-      levels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    },
-    {
-      id: "brutal",
-      type: "reps",
-      levels: [3, 6, 10, 10, 13, 17, 20, 23, 27, 30],
-    },
-    {
-      id: "dips",
-      type: "reps",
-      levels: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
-    },
-    {
-      id: "cooper",
-      type: "time",
-      levels: [
-        14 * 60 + 10,
-        13 * 60 + 50,
-        13 * 60 + 30,
-        13 * 60 + 10,
-        12 * 60 + 50,
-        12 * 60 + 30,
-        12 * 60 + 10,
-        11 * 60 + 50,
-        11 * 60 + 30,
-        11 * 60 + 10,
-      ],
-    },
-  ],
-};
-
-function t(path) {
-  const lang = i18n[state.lang];
-  return path.split(".").reduce((acc, key) => acc[key], lang);
+function init() {
+  fillSelectors();
+  bindEvents();
+  loadPlayers();
+  renderSetup();
+  render();
 }
 
-function format(template, ...values) {
-  return template.replace(/\{(\d+)\}/g, (match, index) => values[index] ?? "");
+function fillSelectors() {
+  setOptions($("points"), [301, 501, 201, 101], 301);
+  setOptions($("checkout"), ["Straight out", "Double out", "Master out"], "Straight out");
+  setOptions($("sets"), [1, 2, 3, 4, 5], 1);
+  setOptions($("legs"), [1, 2, 3, 4, 5], 1);
+  setOptions($("mode"), ["First to", "Best of"], "First to");
 }
 
-function parseNumber(value) {
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  const normalized = trimmed.replace(",", ".");
-  const num = Number.parseFloat(normalized);
-  return Number.isNaN(num) ? NaN : num;
+function setOptions(select, values, defaultValue) {
+  select.innerHTML = "";
+  values.forEach((value) => {
+    const option = document.createElement("option");
+    option.value = String(value);
+    option.textContent = String(value);
+    select.appendChild(option);
+  });
+  select.value = String(defaultValue);
 }
 
-function formatTime(seconds) {
-  const total = Math.round(seconds);
-  const minutes = Math.floor(total / 60);
-  const secs = total % 60;
-  return `${minutes}:${String(secs).padStart(2, "0")}`;
+function bindEvents() {
+  $("add-player-btn").addEventListener("click", addPlayerToLibrary);
+  $("add-to-match").addEventListener("click", addPlayerToMatch);
+  $("remove-from-match").addEventListener("click", removePlayerFromMatch);
+  $("move-up").addEventListener("click", () => moveMatchPlayer(-1));
+  $("move-down").addEventListener("click", () => moveMatchPlayer(1));
+  $("start-btn").addEventListener("click", startGame);
+  $("back-btn").addEventListener("click", () => {
+    state.view = "setup";
+    render();
+  });
+
+  $("double-btn").addEventListener("click", () => {
+    if (state.matchFinished) return;
+    state.selectedMultiplier = "DOUBLE";
+    renderModifierButtons();
+  });
+
+  $("triple-btn").addEventListener("click", () => {
+    if (state.matchFinished) return;
+    state.selectedMultiplier = "TRIPLE";
+    renderModifierButtons();
+  });
+
+  $("undo-btn").addEventListener("click", undoLastThrow);
+
+  const keypadValues = [...Array(20).keys()].map((i) => i + 1).concat([25, 0]);
+  const keypad = $("keypad");
+  keypadValues.forEach((value) => {
+    const button = document.createElement("button");
+    button.className = "key";
+    button.textContent = String(value);
+    button.addEventListener("click", () => applyThrow(value));
+    keypad.appendChild(button);
+  });
 }
 
-function levelDescriptor(level) {
-  if (level <= 3) {
-    return { color: t("color.red"), cls: "level-red", msg: t(`levelMsg.${level}`) };
+function loadPlayers() {
+  const raw = prefs.get("dartPlayers", "");
+  if (!raw.trim()) return;
+  state.playerLibrary = raw.split("\n").map((name) => name.trim()).filter(Boolean);
+}
+
+function savePlayers() {
+  prefs.set("dartPlayers", state.playerLibrary.join("\n"));
+}
+
+function addPlayerToLibrary() {
+  const input = $("new-player");
+  const name = input.value.trim();
+  if (!name) {
+    setSetupStatus("Skriv ett namn innan du trycker Lägg till.");
+    return;
   }
-  if (level <= 6) {
-    return {
-      color: t("color.yellow"),
-      cls: "level-yellow",
-      msg: t(`levelMsg.${level}`),
-    };
+  if (state.playerLibrary.includes(name)) {
+    setSetupStatus("Spelaren finns redan i listan.");
+    return;
   }
-  if (level <= 8) {
-    return { color: t("color.green"), cls: "level-green", msg: t(`levelMsg.${level}`) };
-  }
-  return { color: t("color.blue"), cls: "level-blue", msg: t(`levelMsg.${level}`) };
+  state.playerLibrary.push(name);
+  state.playerLibrary.sort((a, b) => a.localeCompare(b));
+  input.value = "";
+  setSetupStatus("Spelare sparad.");
+  savePlayers();
+  renderSetup();
 }
 
-function buildExercises() {
-  const key = state.genderIndex === 1 ? "female" : "male";
-  return EXERCISES[key].map((exercise) => ({
-    ...exercise,
-    name: t(`exercise.${exercise.id}`),
+function addPlayerToMatch() {
+  const selected = $("player-library").value;
+  if (!selected) {
+    setSetupStatus("Välj en spelare i listan först.");
+    return;
+  }
+  if (state.matchPlayers.length >= 5) {
+    setSetupStatus("Max 5 spelare per match.");
+    return;
+  }
+  if (state.matchPlayers.includes(selected)) {
+    setSetupStatus("Spelaren är redan tillagd i matchen.");
+    return;
+  }
+  state.matchPlayers.push(selected);
+  setSetupStatus("");
+  renderSetup();
+}
+
+function removePlayerFromMatch() {
+  const selected = $("match-players").value;
+  if (!selected) return;
+  state.matchPlayers = state.matchPlayers.filter((name) => name !== selected);
+  renderSetup();
+}
+
+function moveMatchPlayer(direction) {
+  const selected = $("match-players").value;
+  const index = state.matchPlayers.indexOf(selected);
+  if (index < 0) return;
+  const newIndex = index + direction;
+  if (newIndex < 0 || newIndex >= state.matchPlayers.length) return;
+  const [name] = state.matchPlayers.splice(index, 1);
+  state.matchPlayers.splice(newIndex, 0, name);
+  renderSetup(name);
+}
+
+function startGame() {
+  if (!state.matchPlayers.length) {
+    setSetupStatus("Lägg till minst en spelare i matchen.");
+    return;
+  }
+
+  state.startScore = Number($("points").value);
+  state.checkoutRule = parseCheckoutRule($("checkout").value);
+  state.sets = Number($("sets").value);
+  state.legs = Number($("legs").value);
+  state.mode = $("mode").value === "Best of" ? "BEST_OF" : "FIRST_TO";
+
+  state.setsTarget = targetWins(state.sets, state.mode);
+  state.legsTarget = targetWins(state.legs, state.mode);
+  state.currentSet = 1;
+  state.currentLeg = 1;
+  state.currentPlayer = 0;
+  state.pendingBustClear = -1;
+  state.matchFinished = false;
+  state.selectedMultiplier = "SINGLE";
+  state.status = "";
+  state.undoStack = [];
+
+  state.players = state.matchPlayers.map((name) => ({
+    name,
+    remaining: state.startScore,
+    turnStartRemaining: state.startScore,
+    dartsThrown: 0,
+    turnsCompleted: 0,
+    totalRoundPoints: 0,
+    setsWon: 0,
+    legsWonInSet: 0,
+    legsWonTotal: 0,
+    bustHighlight: false,
+    throws: [],
   }));
+
+  state.view = "game";
+  render();
 }
 
-function setStatus(message = "") {
-  $("status").textContent = message;
+function parseCheckoutRule(label) {
+  if (label === "Double out") return "DOUBLE_OUT";
+  if (label === "Master out") return "MASTER_OUT";
+  return "STRAIGHT_OUT";
 }
 
-function readCooper() {
-  const minutes = $("cooper-min").value;
-  const seconds = $("cooper-sec").value;
-  const minutesEmpty = minutes === "";
-  const secondsEmpty = seconds === "";
-  if (minutesEmpty && secondsEmpty) return null;
-  if (minutesEmpty || secondsEmpty) {
-    setStatus(t("statusCooperPick"));
-    return NaN;
-  }
-  return parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
+function targetWins(value, mode) {
+  return mode === "FIRST_TO" ? value : Math.floor(value / 2) + 1;
 }
 
-function readInputs(exercises) {
-  const bodyWeight = parseNumber($("bodyweight").value);
-  const hasRatioInput = ["squat", "bench", "clean"].some((id) => {
-    const value = parseNumber($(id).value);
-    return value !== null && !Number.isNaN(value);
-  });
-  if (hasRatioInput) {
-    if (bodyWeight === null) {
-      setStatus(format(t("statusFillField"), t("labelBodyweight")));
-      return null;
-    }
-    if (Number.isNaN(bodyWeight) || bodyWeight <= 0) {
-      setStatus(t("statusBodyweightInvalid"));
-      return null;
-    }
-  }
+function applyThrow(baseValue) {
+  if (state.matchFinished || !state.players.length) return;
 
-  const values = {};
-  for (const exercise of exercises) {
-    if (exercise.id === "cooper") {
-      const time = readCooper();
-      if (Number.isNaN(time)) return null;
-      values[exercise.id] = time;
-      continue;
-    }
+  const current = state.players[state.currentPlayer];
+  if (current.throws.length >= 3) return;
 
-    const field = $(exercise.id);
-    const parsed = parseNumber(field.value);
-    if (parsed === null) {
-      values[exercise.id] = null;
-      continue;
-    }
-    if (Number.isNaN(parsed)) {
-      setStatus(format(t("statusInvalidNumber"), field.previousElementSibling?.textContent || ""));
-      return null;
-    }
-    values[exercise.id] = parsed;
-  }
-
-  return { bodyWeight, values };
-}
-
-function computeLevel(exercise, value, bodyWeight) {
-  if (exercise.type === "ratio") {
-    if (!bodyWeight) return 1;
-    const ratio = value / bodyWeight;
-    let level = 1;
-    exercise.levels.forEach((threshold, index) => {
-      if (ratio >= threshold) level = index + 1;
-    });
-    return level;
-  }
-  if (exercise.type === "time") {
-    let level = 1;
-    exercise.levels.forEach((threshold, index) => {
-      if (value <= threshold) level = index + 1;
-    });
-    return level;
-  }
-  let level = 1;
-  exercise.levels.forEach((threshold, index) => {
-    if (value >= threshold) level = index + 1;
-  });
-  return level;
-}
-
-function buildDetail(exercise, value, level, bodyWeight) {
-  if (exercise.type === "ratio") {
-    const ratio = value / bodyWeight;
-    return format(
-      t("detail.ratio"),
-      value.toFixed(1),
-      ratio.toFixed(2),
-      exercise.levels[level - 1].toFixed(2)
-    );
-  }
-  if (exercise.type === "time") {
-    return format(t("detail.time"), formatTime(value), formatTime(exercise.levels[level - 1]));
-  }
-  return format(t("detail.reps"), value.toFixed(0), exercise.levels[level - 1].toFixed(0));
-}
-
-function renderResults(results) {
-  const container = $("results-list");
-  container.innerHTML = "";
-  if (!results.length) {
-    container.innerHTML = `<div class="result-card">${t("placeholderResults")}</div>`;
-    return;
-  }
-  results.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = `result-card ${item.descriptor.cls}`;
-    card.innerHTML = `
-      <div>
-        <div class="result-title">${item.exercise} - ${t("labelLevel")} ${item.level}</div>
-        <div class="result-msg">${item.descriptor.msg}</div>
-        <div class="result-detail">${item.detail}</div>
-      </div>
-      <div class="result-chip">${item.descriptor.color}</div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function renderLevelTable(exercises) {
-  const container = $("table-container");
-  const headers = Array.from({ length: 10 }, (_, i) => i + 1);
-  const rows = exercises.map((ex) => {
-    const values = ex.levels.map((val) => {
-      if (ex.type === "ratio") return val.toFixed(2);
-      if (ex.type === "time") return formatTime(val);
-      return val.toFixed(0);
-    });
-    const suffix = ex.type === "ratio" ? t("suffix.bw") : ex.type === "time" ? t("suffix.min") : t("suffix.reps");
-    return { label: `${ex.name} ${suffix}`, values };
-  });
-
-  container.innerHTML = buildTable([t("labelLevel"), ...headers], rows);
-}
-
-function renderAllLevels(exercises, bodyWeight) {
-  const container = $("all-container");
-  const headers = Array.from({ length: 10 }, (_, i) => i + 1);
-  const rows = exercises.map((ex) => {
-    const values = ex.levels.map((val) => {
-      if (ex.type === "ratio") {
-        if (!bodyWeight) return "-";
-        return (val * bodyWeight).toFixed(1);
-      }
-      if (ex.type === "time") return formatTime(val);
-      return val.toFixed(0);
-    });
-    const suffix = ex.type === "ratio" ? t("suffix.kg") : ex.type === "time" ? t("suffix.min") : t("suffix.reps");
-    return { label: `${ex.name} ${suffix}`, values };
-  });
-
-  container.innerHTML = buildTable([t("labelLevel"), ...headers], rows);
-}
-
-function buildTable(headers, rows) {
-  const thead = `<thead><tr>${headers
-    .map((h, i) => (i === 0 ? `<th>${h}</th>` : `<th class="lvl-${i}">${h}</th>`))
-    .join("")}</tr></thead>`;
-  const tbody = `<tbody>${rows
-    .map(
-      (row) => `<tr>${[
-        `<td>${row.label}</td>`,
-        ...row.values.map((v, i) => `<td class="lvl-${i + 1}">${v}</td>`),
-      ].join("")}</tr>`
-    )
-    .join("")}</tbody>`;
-  return `<table class="table">${thead}${tbody}</table>`;
-}
-
-function drawRadar(exercises, levels) {
-  const canvas = $("radar");
-  const ctx = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-  ctx.clearRect(0, 0, width, height);
-
-  const radius = Math.min(width, height) / 2 - 40;
-  const cx = width / 2;
-  const cy = height / 2;
-
-  ctx.strokeStyle = "rgba(60, 70, 90, 0.25)";
-  for (let ring = 1; ring <= 10; ring += 1) {
-    const r = (radius * ring) / 10;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  const count = exercises.length;
-  const step = (Math.PI * 2) / count;
-  ctx.fillStyle = "rgba(22, 27, 34, 0.92)";
-  ctx.font = '12px "Avenir Next"';
-  for (let i = 0; i < count; i += 1) {
-    const angle = -Math.PI / 2 + step * i;
-    const x = cx + Math.cos(angle) * radius;
-    const y = cy + Math.sin(angle) * radius;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    const label = exercises[i].name;
-    const offsetX = x > cx ? 8 : -8;
-    const offsetY = y > cy ? 14 : -6;
-    ctx.fillText(label, x + offsetX - label.length * 3, y + offsetY);
-  }
-
-  if (!levels.length) return;
-
-  const points = levels.map((level, i) => {
-    const value = Math.max(0, Math.min(10, level));
-    const angle = -Math.PI / 2 + step * i;
-    const r = (radius * value) / 10;
-    return {
-      x: cx + Math.cos(angle) * r,
-      y: cy + Math.sin(angle) * r,
-      value,
-    };
-  });
-
-  ctx.strokeStyle = "rgba(31, 58, 147, 0.7)";
-  ctx.fillStyle = "rgba(31, 58, 147, 0.25)";
-  ctx.beginPath();
-  points.forEach((p, i) => {
-    if (i === 0) ctx.moveTo(p.x, p.y);
-    else ctx.lineTo(p.x, p.y);
-  });
-  ctx.closePath();
-  ctx.stroke();
-  ctx.fill();
-
-  ctx.fillStyle = "rgba(31, 58, 147, 0.95)";
-  points.forEach((p) => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  ctx.fillStyle = "rgba(22, 27, 34, 0.95)";
-  points.forEach((p, i) => {
-    const label = String(levels[i]);
-    const offsetX = p.x > cx ? 8 : -8;
-    const offsetY = p.y > cy ? 14 : -8;
-    ctx.fillText(label, p.x + offsetX, p.y + offsetY);
-  });
-}
-
-function render() {
-  const exercises = buildExercises();
-  const inputs = readInputs(exercises);
-  if (inputs === null) return;
-  setStatus("");
-
-  const results = [];
-  const levelsByExercise = [];
-  exercises.forEach((exercise) => {
-    const value = inputs.values[exercise.id];
-    if (value === null) {
-      levelsByExercise.push(0);
-      return;
-    }
-    if (exercise.type === "ratio" && !inputs.bodyWeight) {
-      setStatus(t("statusBodyweightRequired"));
-      return;
-    }
-    const level = computeLevel(exercise, value, inputs.bodyWeight);
-    levelsByExercise.push(level);
-    const descriptor = levelDescriptor(level);
-    const detail = buildDetail(exercise, value, level, inputs.bodyWeight);
-    results.push({
-      exercise: exercise.name,
-      level,
-      descriptor,
-      detail,
-    });
-  });
-
-  if (!results.length) {
-    setStatus(t("statusFillOne"));
-    renderResults([]);
-    state.lastLevels = [];
-    drawRadar(exercises, []);
+  if (baseValue === 25 && state.selectedMultiplier === "TRIPLE") {
+    state.status = "Triple 25 finns inte på tavlan.";
+    renderGame();
     return;
   }
 
-  state.lastLevels = levelsByExercise;
-  renderResults(results);
-  renderLevelTable(exercises);
-  renderAllLevels(exercises, inputs.bodyWeight);
-  drawRadar(exercises, levelsByExercise);
+  state.undoStack.push(snapshot());
 
-  saveInputs();
+  const hit = createHit(baseValue, state.selectedMultiplier);
+  current.throws.push(hit);
+  current.dartsThrown += 1;
+
+  if (state.pendingBustClear >= 0 && current.throws.length === 1) {
+    state.players[state.pendingBustClear].bustHighlight = false;
+    state.pendingBustClear = -1;
+  }
+
+  const projected = current.remaining - hit.score;
+  let bust = projected < 0;
+  if (!bust && state.checkoutRule !== "STRAIGHT_OUT" && projected === 1) bust = true;
+  if (!bust && projected === 0 && !isValidFinisher(hit)) bust = true;
+
+  if (bust) {
+    current.remaining = current.turnStartRemaining;
+    current.turnsCompleted += 1;
+    current.throws = [];
+    current.bustHighlight = true;
+    state.pendingBustClear = state.currentPlayer;
+    state.status = `${current.name} blev tjock (bust). Poängen återställdes.`;
+    advancePlayer();
+    state.selectedMultiplier = "SINGLE";
+    renderGame();
+    return;
+  }
+
+  current.remaining = projected;
+
+  if (current.remaining === 0) {
+    finalizeTurn(current);
+    processLegWin(state.currentPlayer);
+    state.selectedMultiplier = "SINGLE";
+    renderGame();
+    return;
+  }
+
+  if (current.throws.length === 3) {
+    finalizeTurn(current);
+    advancePlayer();
+    state.status = "";
+  }
+
+  state.selectedMultiplier = "SINGLE";
+  renderGame();
 }
 
-function setView(view) {
-  state.view = view;
-  [
-    "results",
-    "table",
-    "radar",
-    "all",
-  ].forEach((name) => {
-    $("view-" + name).classList.toggle("hidden", name !== view);
-    $("tab-" + name).classList.toggle("active", name === view);
+function createHit(base, mult) {
+  const multiplierValue = mult === "DOUBLE" ? 2 : mult === "TRIPLE" ? 3 : 1;
+  const label = mult === "DOUBLE" ? `D${base}` : mult === "TRIPLE" ? `T${base}` : String(base);
+  return { base, multiplier: multiplierValue, score: base * multiplierValue, label };
+}
+
+function isValidFinisher(hit) {
+  if (state.checkoutRule === "STRAIGHT_OUT") return true;
+  if (state.checkoutRule === "DOUBLE_OUT") return hit.multiplier === 2;
+  return hit.multiplier === 2 || hit.multiplier === 3;
+}
+
+function finalizeTurn(player) {
+  const roundPoints = player.turnStartRemaining - player.remaining;
+  player.turnsCompleted += 1;
+  player.totalRoundPoints += roundPoints;
+  player.throws = [];
+}
+
+function processLegWin(winnerIndex) {
+  const winner = state.players[winnerIndex];
+  winner.legsWonInSet += 1;
+  winner.legsWonTotal += 1;
+
+  if (winner.legsWonInSet >= state.legsTarget) {
+    winner.setsWon += 1;
+    if (winner.setsWon >= state.setsTarget) {
+      state.matchFinished = true;
+      state.status = `${winner.name} vann matchen.`;
+      return;
+    }
+
+    state.players.forEach((p) => {
+      p.legsWonInSet = 0;
+      p.remaining = state.startScore;
+      p.turnStartRemaining = state.startScore;
+      p.throws = [];
+      p.bustHighlight = false;
+    });
+    state.currentSet += 1;
+    state.currentLeg = 1;
+    state.currentPlayer = winnerIndex;
+    state.pendingBustClear = -1;
+    state.status = `${winner.name} vann setet. Nytt set startat.`;
+    return;
+  }
+
+  state.players.forEach((p) => {
+    p.remaining = state.startScore;
+    p.turnStartRemaining = state.startScore;
+    p.throws = [];
+    p.bustHighlight = false;
   });
-  $("results-title").textContent =
-    view === "results"
-      ? t("tabResults")
-      : view === "table"
-      ? t("tabTable")
-      : view === "all"
-      ? t("tabAll")
-      : t("tabRadar");
+  state.currentLeg += 1;
+  state.currentPlayer = winnerIndex;
+  state.pendingBustClear = -1;
+  state.status = `${winner.name} vann leget. Nytt leg startat.`;
 }
 
-function saveInputs() {
-  store.set("bodyWeight", $("bodyweight").value.trim());
-  ["squat", "bench", "clean", "chins", "brutal", "dips"].forEach((id) => {
-    store.set(id, $(id).value.trim());
-  });
-  store.set("cooperMinutes", $("cooper-min").value);
-  store.set("cooperSeconds", $("cooper-sec").value);
+function advancePlayer() {
+  state.currentPlayer = (state.currentPlayer + 1) % state.players.length;
+  const next = state.players[state.currentPlayer];
+  next.turnStartRemaining = next.remaining;
+  next.throws = [];
 }
 
-function restoreInputs() {
-  $("bodyweight").value = store.get("bodyWeight", "");
-  ["squat", "bench", "clean", "chins", "brutal", "dips"].forEach((id) => {
-    $(id).value = store.get(id, "");
-  });
-  const minutes = store.get("cooperMinutes", "");
-  const seconds = store.get("cooperSeconds", "");
-  $("cooper-min").value = minutes;
-  $("cooper-sec").value = seconds;
+function undoLastThrow() {
+  if (!state.undoStack.length) {
+    state.status = "Inget att ångra.";
+    renderGame();
+    return;
+  }
+  const snap = state.undoStack.pop();
+  Object.assign(state, JSON.parse(JSON.stringify(snap)));
+  renderGame();
 }
 
-function snapshotInputs() {
+function snapshot() {
   return {
-    bodyweight: $("bodyweight").value,
-    squat: $("squat").value,
-    bench: $("bench").value,
-    clean: $("clean").value,
-    chins: $("chins").value,
-    brutal: $("brutal").value,
-    dips: $("dips").value,
-    cooperMin: $("cooper-min").value,
-    cooperSec: $("cooper-sec").value,
+    startScore: state.startScore,
+    checkoutRule: state.checkoutRule,
+    sets: state.sets,
+    legs: state.legs,
+    mode: state.mode,
+    setsTarget: state.setsTarget,
+    legsTarget: state.legsTarget,
+    currentSet: state.currentSet,
+    currentLeg: state.currentLeg,
+    currentPlayer: state.currentPlayer,
+    pendingBustClear: state.pendingBustClear,
+    matchFinished: state.matchFinished,
+    selectedMultiplier: state.selectedMultiplier,
+    players: state.players,
+    status: state.status,
+    view: state.view,
+    matchPlayers: state.matchPlayers,
+    playerLibrary: state.playerLibrary,
+    undoStack: state.undoStack,
   };
 }
 
-function restoreSnapshot(snapshot) {
-  $("bodyweight").value = snapshot.bodyweight;
-  $("squat").value = snapshot.squat;
-  $("bench").value = snapshot.bench;
-  $("clean").value = snapshot.clean;
-  $("chins").value = snapshot.chins;
-  $("brutal").value = snapshot.brutal;
-  $("dips").value = snapshot.dips;
-  $("cooper-min").value = snapshot.cooperMin;
-  $("cooper-sec").value = snapshot.cooperSec;
+function render() {
+  $("setup-view").classList.toggle("hidden", state.view !== "setup");
+  $("game-view").classList.toggle("hidden", state.view !== "game");
+  if (state.view === "setup") renderSetup();
+  if (state.view === "game") renderGame();
 }
 
-function updateUndo() {
-  const btn = $("undo");
-  btn.style.display = state.lastCleared ? "inline-flex" : "none";
+function renderSetup(selectMatchName = "") {
+  renderSelect($("player-library"), state.playerLibrary);
+  renderSelect($("match-players"), state.matchPlayers, selectMatchName);
+
+  $("points").value = String(state.startScore);
+  $("checkout").value =
+    state.checkoutRule === "DOUBLE_OUT"
+      ? "Double out"
+      : state.checkoutRule === "MASTER_OUT"
+      ? "Master out"
+      : "Straight out";
+  $("sets").value = String(state.sets);
+  $("legs").value = String(state.legs);
+  $("mode").value = state.mode === "BEST_OF" ? "Best of" : "First to";
+
+  $("setup-status").textContent = state.setupStatus || "";
 }
 
-function initSelects() {
-  const langSelect = $("language");
-  langSelect.innerHTML = `
-    <option value="sv">${t("language.sv")}</option>
-    <option value="en">${t("language.en")}</option>
-  `;
-  langSelect.value = state.lang;
-
-  const genderSelect = $("gender");
-  genderSelect.innerHTML = `
-    <option value="0">${t("gender.male")}</option>
-    <option value="1">${t("gender.female")}</option>
-  `;
-  genderSelect.value = String(state.genderIndex);
-
-  const minSelect = $("cooper-min");
-  minSelect.innerHTML = '<option value=""></option>';
-  for (let i = 1; i <= 59; i += 1) {
-    minSelect.innerHTML += `<option value="${i}">${i}</option>`;
-  }
-
-  const secSelect = $("cooper-sec");
-  secSelect.innerHTML = '<option value=""></option>';
-  for (let i = 0; i <= 59; i += 1) {
-    const val = String(i).padStart(2, "0");
-    secSelect.innerHTML += `<option value="${val}">${val}</option>`;
-  }
+function setSetupStatus(message) {
+  state.setupStatus = message;
+  $("setup-status").textContent = message;
 }
 
-function applyTexts() {
-  $("title").textContent = t("title");
-  $("subtitle").textContent = t("subtitle");
-  $("label-language").textContent = t("labelLanguage");
-  $("label-gender").textContent = t("labelGender");
-  $("label-bodyweight").textContent = t("labelBodyweight");
-  $("label-squat").textContent = t("labelSquat");
-  $("label-bench").textContent = t("labelBench");
-  $("label-clean").textContent = t("labelClean");
-  $("label-chins").textContent = t("labelChins");
-  $("label-brutal").textContent = t("labelBrutal");
-  $("label-dips").textContent = t("labelDips");
-  $("label-cooper").textContent = t("labelCooper");
-
-  $("bodyweight").placeholder = t("promptBodyweight");
-  $("squat").placeholder = t("promptSquat");
-  $("bench").placeholder = t("promptBench");
-  $("clean").placeholder = t("promptClean");
-  $("chins").placeholder = t("promptChins");
-  $("brutal").placeholder = t("promptBrutal");
-  $("dips").placeholder = t("promptDips");
-
-  $("calculate").textContent = t("btnCalculate");
-  $("clear").textContent = t("btnClear");
-  $("undo").textContent = t("btnUndo");
-
-  $("tab-results").textContent = t("tabResults");
-  $("tab-table").textContent = t("tabTable");
-  $("tab-radar").textContent = t("tabRadar");
-  $("tab-all").textContent = t("tabAll");
+function renderSelect(select, values, selected = "") {
+  select.innerHTML = "";
+  values.forEach((value) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    if (selected && value === selected) option.selected = true;
+    select.appendChild(option);
+  });
 }
 
-function init() {
-  if (!i18n[state.lang]) state.lang = "sv";
-  applyTexts();
-  initSelects();
-  restoreInputs();
-  updateUndo();
-  setView(state.view);
-  renderResults([]);
+function renderGame() {
+  const modeLabel = state.mode === "BEST_OF" ? "Best of" : "First to";
+  const checkoutLabel =
+    state.checkoutRule === "DOUBLE_OUT"
+      ? "Double out"
+      : state.checkoutRule === "MASTER_OUT"
+      ? "Master out"
+      : "Straight out";
 
-  $("language").addEventListener("change", (e) => {
-    state.lang = e.target.value;
-    store.set("lang", state.lang);
-    applyTexts();
-    initSelects();
-    restoreInputs();
-    render();
-  });
+  $("game-title").textContent = String(state.startScore);
+  $("game-subtitle").textContent = `${checkoutLabel} | ${modeLabel} | Set ${state.currentSet} (${state.setsTarget} att vinna) | Leg ${state.currentLeg} (${state.legsTarget} att vinna)`;
+  $("game-status").textContent = state.status || "";
 
-  $("gender").addEventListener("change", (e) => {
-    state.genderIndex = Number(e.target.value);
-    store.set("genderIndex", String(state.genderIndex));
-    render();
-  });
+  const board = $("players-board");
+  board.innerHTML = "";
 
-  $("calculate").addEventListener("click", () => {
-    setStatus("");
-    render();
-  });
+  state.players.forEach((player, index) => {
+    const turnTotal = player.throws.reduce((sum, hit) => sum + hit.score, 0);
+    const avg = player.turnsCompleted ? (player.totalRoundPoints / player.turnsCompleted).toFixed(1) : "0.0";
 
-  $("clear").addEventListener("click", () => {
-    state.lastCleared = snapshotInputs();
-    ["bodyweight", "squat", "bench", "clean", "chins", "brutal", "dips"].forEach((id) => {
-      $(id).value = "";
-    });
-    $("cooper-min").value = "";
-    $("cooper-sec").value = "";
-    setStatus("");
-    saveInputs();
-    updateUndo();
-    renderResults([]);
-    drawRadar(buildExercises(), []);
-  });
+    const row = document.createElement("article");
+    row.className = "player-row";
 
-  $("undo").addEventListener("click", () => {
-    if (!state.lastCleared) return;
-    restoreSnapshot(state.lastCleared);
-    state.lastCleared = null;
-    saveInputs();
-    updateUndo();
-  });
+    const indicator = document.createElement("div");
+    indicator.className = "turn-indicator";
+    if (player.bustHighlight) indicator.classList.add("bust");
+    else if (index === state.currentPlayer && !state.matchFinished) indicator.classList.add("active");
 
-  $("tab-results").addEventListener("click", () => setView("results"));
-  $("tab-table").addEventListener("click", () => setView("table"));
-  $("tab-radar").addEventListener("click", () => setView("radar"));
-  $("tab-all").addEventListener("click", () => {
-    const bodyWeight = parseNumber($("bodyweight").value);
-    if (bodyWeight === null) {
-      setStatus(t("statusAllNeedWeight"));
+    const content = document.createElement("div");
+
+    const top = document.createElement("div");
+    top.className = "player-top";
+    top.innerHTML = `
+      <div>
+        <div class="remaining">${player.remaining}</div>
+        <div class="player-name">${player.name}</div>
+      </div>
+      <div class="stats">→ ${player.dartsThrown}<br>Snitt/runda: ${avg}<br>Set: ${player.setsWon} | Leg: ${player.legsWonInSet}</div>
+    `;
+
+    const throwRow = document.createElement("div");
+    throwRow.className = "throw-row";
+    for (let i = 0; i < 3; i += 1) {
+      const box = document.createElement("div");
+      box.className = "throw-box";
+      const hit = player.throws[i];
+      box.textContent = hit ? hit.label : "";
+      if (hit?.multiplier === 2) box.classList.add("double");
+      if (hit?.multiplier === 3) box.classList.add("triple");
+      throwRow.appendChild(box);
     }
-    renderAllLevels(buildExercises(), bodyWeight);
-    setView("all");
+
+    const total = document.createElement("div");
+    total.className = "round-total";
+    total.textContent = `Runda: ${turnTotal}`;
+
+    content.appendChild(top);
+    content.appendChild(throwRow);
+    content.appendChild(total);
+
+    row.appendChild(indicator);
+    row.appendChild(content);
+    board.appendChild(row);
   });
 
-  window.addEventListener("resize", () => {
-    const canvas = $("radar");
-    canvas.width = Math.min(700, canvas.parentElement.clientWidth - 40);
-    canvas.height = 520;
-    drawRadar(buildExercises(), state.lastLevels);
+  if (!state.matchFinished) {
+    const remaining = state.players[state.currentPlayer].remaining;
+    const suggestions = buildCheckoutSuggestions(remaining, state.checkoutRule, 4);
+    $("checkout-main").textContent = `Checkout-förslag: ${suggestions[0] || "Ingen 3-pils checkout"}`;
+    $("checkout-alt1").textContent = suggestions[1] ? `Alt 1: ${suggestions[1]}` : "";
+    $("checkout-alt2").textContent = suggestions[2] ? `Alt 2: ${suggestions[2]}` : "";
+    $("checkout-alt3").textContent = suggestions[3] ? `Alt 3: ${suggestions[3]}` : "";
+  } else {
+    $("checkout-main").textContent = "Matchen är klar.";
+    $("checkout-alt1").textContent = "";
+    $("checkout-alt2").textContent = "";
+    $("checkout-alt3").textContent = "";
+  }
+
+  renderModifierButtons();
+}
+
+function renderModifierButtons() {
+  $("double-btn").classList.toggle("selected", state.selectedMultiplier === "DOUBLE");
+  $("triple-btn").classList.toggle("selected", state.selectedMultiplier === "TRIPLE");
+}
+
+function buildCheckoutSuggestions(remaining, rule, limit) {
+  if (remaining <= 1) return [];
+
+  const scoringHits = buildScoringHitOrder();
+  const finishHits = buildFinishingHits(rule);
+  const routes = [];
+  const seen = new Set();
+
+  for (let darts = 1; darts <= 3; darts += 1) {
+    collectRoutes(remaining, darts, scoringHits, finishHits, routes, seen);
+  }
+
+  routes.sort((a, b) => compareRoutes(a, b, rule));
+  return routes.slice(0, limit).map((route) => route.map((hit) => hit.label).join(" + "));
+}
+
+function collectRoutes(remaining, darts, scoringHits, finishHits, routes, seen) {
+  if (darts === 1) {
+    finishHits.forEach((finisher) => {
+      if (finisher.score === remaining) {
+        pushRoute([finisher], routes, seen);
+      }
+    });
+    return;
+  }
+
+  scoringHits.forEach((first) => {
+    if (first.score >= remaining) return;
+    const left1 = remaining - first.score;
+
+    if (darts === 2) {
+      finishHits.forEach((finisher) => {
+        if (finisher.score === left1) pushRoute([first, finisher], routes, seen);
+      });
+      return;
+    }
+
+    scoringHits.forEach((second) => {
+      if (second.score >= left1) return;
+      const left2 = left1 - second.score;
+      finishHits.forEach((finisher) => {
+        if (finisher.score === left2) pushRoute([first, second, finisher], routes, seen);
+      });
+    });
   });
+}
+
+function pushRoute(route, routes, seen) {
+  const key = route.map((h) => h.label).join("+");
+  if (seen.has(key)) return;
+  seen.add(key);
+  routes.push(route);
+}
+
+function compareRoutes(left, right, rule) {
+  if (left.length !== right.length) return left.length - right.length;
+
+  const leftFinal = finalShotPreference(left[left.length - 1], rule);
+  const rightFinal = finalShotPreference(right[right.length - 1], rule);
+  if (leftFinal !== rightFinal) return rightFinal - leftFinal;
+
+  const leftAgg = nonFinalAggression(left);
+  const rightAgg = nonFinalAggression(right);
+  if (leftAgg !== rightAgg) return rightAgg - leftAgg;
+
+  return left.map((h) => h.label).join("+").localeCompare(right.map((h) => h.label).join("+"));
+}
+
+function finalShotPreference(hit, rule) {
+  if (rule === "DOUBLE_OUT") return preferredDoubleBaseScore(hit.base);
+  if (rule === "MASTER_OUT") {
+    if (hit.multiplier === 2) return 220 + preferredDoubleBaseScore(hit.base);
+    return 170 + hit.base;
+  }
+  if (hit.multiplier === 2) return 300;
+  if (hit.multiplier === 3) return 250;
+  if (hit.base === 25) return 200;
+  return 100;
+}
+
+function preferredDoubleBaseScore(base) {
+  const preferred = [20, 16, 18, 12, 10, 8, 14, 6, 4, 2, 25, 15, 11, 9, 7, 5, 3, 1, 13, 17, 19];
+  const idx = preferred.indexOf(base);
+  return idx >= 0 ? 100 - idx : 0;
+}
+
+function nonFinalAggression(route) {
+  let score = 0;
+  for (let i = 0; i < route.length - 1; i += 1) {
+    const hit = route[i];
+    if (hit.multiplier === 3) score += 300 + hit.base;
+    else if (hit.multiplier === 2) score += 200 + hit.base;
+    else score += 100 + hit.base;
+  }
+  return score;
+}
+
+function buildScoringHitOrder() {
+  const hits = [];
+  for (let value = 20; value >= 1; value -= 1) hits.push({ base: value, multiplier: 3, score: value * 3, label: `T${value}` });
+  for (let value = 20; value >= 1; value -= 1) hits.push({ base: value, multiplier: 2, score: value * 2, label: `D${value}` });
+  for (let value = 20; value >= 1; value -= 1) hits.push({ base: value, multiplier: 1, score: value, label: `${value}` });
+  hits.push({ base: 25, multiplier: 2, score: 50, label: "D25" });
+  hits.push({ base: 25, multiplier: 1, score: 25, label: "25" });
+  return hits;
+}
+
+function buildFinishingHits(rule) {
+  const doublesPriority = [20, 16, 18, 12, 10, 8, 14, 6, 4, 2, 25, 15, 11, 9, 7, 5, 3, 1, 13, 17, 19];
+  const finishes = doublesPriority.map((value) => ({ base: value, multiplier: 2, score: value * 2, label: `D${value}` }));
+
+  if (rule === "MASTER_OUT") {
+    for (let value = 20; value >= 1; value -= 1) {
+      finishes.push({ base: value, multiplier: 3, score: value * 3, label: `T${value}` });
+    }
+  }
+
+  if (rule === "STRAIGHT_OUT") {
+    for (let value = 20; value >= 1; value -= 1) {
+      finishes.push({ base: value, multiplier: 3, score: value * 3, label: `T${value}` });
+    }
+    for (let value = 20; value >= 1; value -= 1) {
+      finishes.push({ base: value, multiplier: 1, score: value, label: `${value}` });
+    }
+    finishes.push({ base: 25, multiplier: 1, score: 25, label: "25" });
+  }
+
+  return finishes;
 }
 
 init();

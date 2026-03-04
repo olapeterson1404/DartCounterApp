@@ -2,104 +2,96 @@
 <html lang="sv">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Dart Counter</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app">
-      <header class="header">
-        <div class="title-row">
-          <div>
-            <h1 id="title">Dart Counter</h1>
-            <div class="title-accent"></div>
-          </div>
-          <div class="language">
-            <label id="label-language" for="language"></label>
-            <select id="language" aria-label="Language"></select>
-          </div>
+    <main class="phone">
+      <section id="setup-view" class="view">
+        <header class="head">
+          <h1>Dart Counter</h1>
+          <p>Välj spel, spelare och starta match.</p>
+        </header>
+
+        <div class="card settings">
+          <label>Poäng
+            <select id="points"></select>
+          </label>
+          <label>Checkout
+            <select id="checkout"></select>
+          </label>
+          <label>Sets
+            <select id="sets"></select>
+          </label>
+          <label>Legs
+            <select id="legs"></select>
+          </label>
+          <label>Set/Leg
+            <select id="mode"></select>
+          </label>
         </div>
-        <p id="subtitle" class="subtitle"></p>
-      </header>
 
-      <main class="layout">
-        <section class="panel inputs">
+        <div class="card">
           <div class="row">
-            <label id="label-gender" for="gender"></label>
-            <select id="gender"></select>
+            <input id="new-player" type="text" placeholder="Nytt spelarnamn" />
+            <button id="add-player-btn" class="btn primary">Lägg till</button>
           </div>
 
-          <div class="card">
-            <div class="grid">
-              <label id="label-bodyweight" for="bodyweight"></label>
-              <input id="bodyweight" type="text" inputmode="decimal" />
-
-              <label id="label-squat" for="squat"></label>
-              <input id="squat" type="text" inputmode="decimal" />
-
-              <label id="label-bench" for="bench"></label>
-              <input id="bench" type="text" inputmode="decimal" />
-
-              <label id="label-clean" for="clean"></label>
-              <input id="clean" type="text" inputmode="decimal" />
-
-              <label id="label-chins" for="chins"></label>
-              <input id="chins" type="text" inputmode="numeric" />
-
-              <label id="label-brutal" for="brutal"></label>
-              <input id="brutal" type="text" inputmode="numeric" />
-
-              <label id="label-dips" for="dips"></label>
-              <input id="dips" type="text" inputmode="numeric" />
-
-              <label id="label-cooper"></label>
-              <div class="cooper">
-                <select id="cooper-min"></select>
-                <span>:</span>
-                <select id="cooper-sec"></select>
+          <div class="lists">
+            <div>
+              <h3>Sparade spelare</h3>
+              <select id="player-library" size="5"></select>
+              <button id="add-to-match" class="btn">Lägg till i match</button>
+            </div>
+            <div>
+              <h3>Matchspelare (max 5)</h3>
+              <select id="match-players" size="5"></select>
+              <div class="row small-gap">
+                <button id="remove-from-match" class="btn">Ta bort</button>
+                <button id="move-up" class="btn">Upp</button>
+                <button id="move-down" class="btn">Ner</button>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="actions">
-            <button id="calculate" class="btn primary"></button>
-            <button id="clear" class="btn ghost"></button>
-            <button id="undo" class="btn ghost"></button>
+        <p id="setup-status" class="status"></p>
+        <button id="start-btn" class="btn start">Starta spel</button>
+      </section>
+
+      <section id="game-view" class="view hidden">
+        <header class="head">
+          <div class="row spread">
+            <div>
+              <h1 id="game-title">301</h1>
+              <p id="game-subtitle"></p>
+            </div>
+            <button id="back-btn" class="btn">Tillbaka</button>
           </div>
-          <div id="status" class="status"></div>
+        </header>
+
+        <p id="game-status" class="status"></p>
+
+        <section id="players-board" class="players"></section>
+
+        <section class="card">
+          <p id="checkout-main" class="checkout-main"></p>
+          <p id="checkout-alt1" class="checkout-alt"></p>
+          <p id="checkout-alt2" class="checkout-alt"></p>
+          <p id="checkout-alt3" class="checkout-alt"></p>
         </section>
 
-        <section class="panel results">
-          <div class="results-header">
-            <h2 id="results-title"></h2>
-            <div class="tabs">
-              <button id="tab-results" class="btn ghost"></button>
-              <button id="tab-table" class="btn ghost"></button>
-              <button id="tab-radar" class="btn ghost"></button>
-              <button id="tab-all" class="btn ghost"></button>
-            </div>
+        <section class="card keypad-wrap">
+          <div class="row small-gap">
+            <button id="double-btn" class="btn mod double">DOUBLE</button>
+            <button id="triple-btn" class="btn mod triple">TRIPLE</button>
+            <button id="undo-btn" class="btn mod undo">ÅNGRA</button>
           </div>
-
-          <div class="results-surface">
-            <div id="view-results" class="view">
-              <div id="results-list" class="result-list"></div>
-            </div>
-
-            <div id="view-table" class="view hidden">
-              <div id="table-container"></div>
-            </div>
-
-            <div id="view-radar" class="view hidden">
-              <canvas id="radar" width="640" height="520"></canvas>
-            </div>
-
-            <div id="view-all" class="view hidden">
-              <div id="all-container"></div>
-            </div>
-          </div>
+          <div id="keypad" class="keypad"></div>
         </section>
-      </main>
-    </div>
+      </section>
+    </main>
 
     <script src="app.js"></script>
   </body>
