@@ -1,0 +1,244 @@
+.root {
+    -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
+    -fx-background-color: linear-gradient(to bottom right, #edf2f7, #dce8f2);
+    -fx-text-fill: #15202b;
+}
+
+.header {
+    -fx-padding: 18 16 8 16;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+
+.subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+}
+
+.surface {
+    -fx-padding: 6 12 14 12;
+}
+
+.setup-pane,
+.game-pane {
+    -fx-spacing: 14;
+}
+
+.card {
+    -fx-padding: 12;
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(15, 23, 42, 0.14);
+    -fx-border-radius: 14;
+}
+
+.section-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.text-field,
+.combo-box,
+.list-view {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.list-view {
+    -fx-background-insets: 0;
+    -fx-border-color: rgba(15, 23, 42, 0.14);
+}
+
+.primary-button,
+.secondary-button,
+.start-button,
+.modifier-button,
+.undo-button,
+.score-button {
+    -fx-cursor: hand;
+    -fx-font-weight: 700;
+    -fx-min-height: 42;
+}
+
+.primary-button {
+    -fx-background-color: #0f4c81;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}
+
+.secondary-button {
+    -fx-background-color: rgba(15, 76, 129, 0.14);
+    -fx-text-fill: #0f4c81;
+    -fx-background-radius: 10;
+}
+
+.start-button {
+    -fx-background-color: #155e3f;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 12;
+}
+
+.status-label {
+    -fx-text-fill: #b91c1c;
+    -fx-font-size: 12px;
+}
+
+.game-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: 900;
+}
+
+.game-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #475569;
+}
+
+.players-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+.players-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.players-board {
+    -fx-background-color: transparent;
+}
+
+.player-row {
+    -fx-padding: 10;
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-border-color: rgba(15, 23, 42, 0.14);
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-alignment: top-left;
+}
+
+.turn-bar {
+    -fx-min-width: 8;
+    -fx-max-width: 8;
+    -fx-pref-width: 8;
+    -fx-min-height: 84;
+    -fx-background-radius: 8;
+    -fx-background-color: rgba(148, 163, 184, 0.45);
+}
+
+.turn-bar-active {
+    -fx-background-color: #16a34a;
+}
+
+.turn-bar-bust {
+    -fx-background-color: #dc2626;
+}
+
+.score-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: 900;
+}
+
+.player-name {
+    -fx-font-size: 14px;
+    -fx-opacity: 0.72;
+}
+
+.throw-boxes {
+    -fx-alignment: center-left;
+}
+
+.throw-box {
+    -fx-min-width: 44;
+    -fx-pref-width: 44;
+    -fx-max-width: 44;
+    -fx-min-height: 34;
+    -fx-alignment: center;
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+    -fx-border-color: #64748b;
+    -fx-border-width: 1;
+    -fx-background-color: rgba(248, 250, 252, 0.96);
+}
+
+.throw-double {
+    -fx-text-fill: #ca8a04;
+}
+
+.throw-triple {
+    -fx-text-fill: #ea580c;
+}
+
+.round-total,
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #334155;
+}
+
+.checkout-hint {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+}
+
+.checkout-alt-wrap {
+    -fx-padding: 2 0 0 0;
+}
+
+.checkout-alt {
+    -fx-font-size: 12px;
+    -fx-text-fill: #334155;
+}
+
+.keypad-panel {
+    -fx-padding: 4 0 0 0;
+}
+
+.score-button {
+    -fx-min-width: 62;
+    -fx-pref-width: 62;
+    -fx-max-width: 62;
+    -fx-min-height: 62;
+    -fx-max-height: 62;
+    -fx-background-radius: 6;
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 18px;
+}
+
+.double-button,
+.triple-button,
+.undo-button {
+    -fx-min-height: 44;
+    -fx-pref-height: 44;
+    -fx-padding: 0 12;
+    -fx-background-radius: 8;
+    -fx-text-fill: #111827;
+    -fx-max-width: Infinity;
+}
+
+.setup-lists .card {
+    -fx-padding: 10;
+}
+
+.double-button {
+    -fx-background-color: #facc15;
+}
+
+.triple-button {
+    -fx-background-color: #fb923c;
+}
+
+.undo-button {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+.modifier-selected {
+    -fx-border-color: #111827;
+    -fx-border-width: 2;
+}

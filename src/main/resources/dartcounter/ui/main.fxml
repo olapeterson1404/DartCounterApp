@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+
+<BorderPane fx:controller="dartcounter.ui.MainController"
+            stylesheets="@styles.css"
+            styleClass="phone-root"
+            xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox spacing="8" styleClass="header">
+            <Label text="Dart Counter" styleClass="title"/>
+            <Label text="Välj speltyp, checkout, spelare och starta matchen." styleClass="subtitle"/>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane styleClass="surface">
+            <VBox fx:id="setupPane" spacing="16" styleClass="setup-pane">
+                <GridPane hgap="10" vgap="10" styleClass="card">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="110"/>
+                        <ColumnConstraints minWidth="170" hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Poäng" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="pointsBox" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Checkout" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="checkoutBox" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Sets" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="setsBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Legs" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="legsBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Label text="Set/Leg" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="setLegModeBox" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <HBox spacing="10" styleClass="card add-player-row">
+                    <TextField fx:id="playerNameField" promptText="Nytt spelarnamn" HBox.hgrow="ALWAYS"/>
+                    <Button text="Lägg till" onAction="#onAddPlayerToLibrary" styleClass="primary-button"/>
+                </HBox>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="setup-lists">
+                    <VBox spacing="8" styleClass="card">
+                        <Label text="Sparade spelare" styleClass="section-title"/>
+                        <ListView fx:id="playerLibraryList" prefHeight="140" VBox.vgrow="ALWAYS"/>
+                        <Button text="Lägg till i match" onAction="#onAddSelectedPlayer" styleClass="secondary-button"/>
+                    </VBox>
+
+                    <VBox spacing="8" styleClass="card">
+                        <Label text="Matchspelare (max 5)" styleClass="section-title"/>
+                        <ListView fx:id="selectedPlayersList" prefHeight="140" VBox.vgrow="ALWAYS"/>
+                        <HBox spacing="8">
+                            <Button text="Ta bort" onAction="#onRemoveSelectedPlayer" styleClass="secondary-button" HBox.hgrow="ALWAYS"/>
+                            <Button text="Upp" onAction="#onMovePlayerUp" styleClass="secondary-button"/>
+                            <Button text="Ner" onAction="#onMovePlayerDown" styleClass="secondary-button"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <Label fx:id="setupStatusLabel" styleClass="status-label"/>
+                <Button text="Starta spel" onAction="#onStartGame" styleClass="start-button"/>
+            </VBox>
+
+            <VBox fx:id="gamePane" spacing="14" visible="false" managed="false" styleClass="game-pane">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <VBox spacing="2" HBox.hgrow="ALWAYS">
+                        <Label fx:id="gameTitleLabel" styleClass="game-title"/>
+                        <Label fx:id="gameSubtitleLabel" styleClass="game-subtitle"/>
+                    </VBox>
+                    <Button text="Tillbaka" onAction="#onBackToSetup" styleClass="secondary-button"/>
+                </HBox>
+
+                <Label fx:id="gameStatusLabel" styleClass="status-label"/>
+
+                <ScrollPane fitToWidth="true" styleClass="players-scroll" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox fx:id="playersBoard" spacing="10" styleClass="players-board">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+
+                <Label fx:id="checkoutHintLabel" styleClass="checkout-hint"/>
+                <VBox spacing="4" styleClass="checkout-alt-wrap">
+                    <Label fx:id="checkoutAlt1Label" styleClass="checkout-alt"/>
+                    <Label fx:id="checkoutAlt2Label" styleClass="checkout-alt"/>
+                    <Label fx:id="checkoutAlt3Label" styleClass="checkout-alt"/>
+                </VBox>
+
+                <Separator/>
+
+                <VBox spacing="10" styleClass="keypad-panel">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Button fx:id="doubleButton" text="DOUBLE" onAction="#onSetDoubleModifier" styleClass="double-button modifier-button" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="tripleButton" text="TRIPLE" onAction="#onSetTripleModifier" styleClass="triple-button modifier-button" HBox.hgrow="ALWAYS"/>
+                        <Button text="ÅNGRA" onAction="#onUndoLastThrow" styleClass="undo-button" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <FlowPane fx:id="numberPad" hgap="8" vgap="8" prefWrapLength="350"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dart Counter</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="title-row">
+          <div>
+            <h1 id="title">Dart Counter</h1>
+            <div class="title-accent"></div>
+          </div>
+          <div class="language">
+            <label id="label-language" for="language"></label>
+            <select id="language" aria-label="Language"></select>
+          </div>
+        </div>
+        <p id="subtitle" class="subtitle"></p>
+      </header>
+
+      <main class="layout">
+        <section class="panel inputs">
+          <div class="row">
+            <label id="label-gender" for="gender"></label>
+            <select id="gender"></select>
+          </div>
+
+          <div class="card">
+            <div class="grid">
+              <label id="label-bodyweight" for="bodyweight"></label>
+              <input id="bodyweight" type="text" inputmode="decimal" />
+
+              <label id="label-squat" for="squat"></label>
+              <input id="squat" type="text" inputmode="decimal" />
+
+              <label id="label-bench" for="bench"></label>
+              <input id="bench" type="text" inputmode="decimal" />
+
+              <label id="label-clean" for="clean"></label>
+              <input id="clean" type="text" inputmode="decimal" />
+
+              <label id="label-chins" for="chins"></label>
+              <input id="chins" type="text" inputmode="numeric" />
+
+              <label id="label-brutal" for="brutal"></label>
+              <input id="brutal" type="text" inputmode="numeric" />
+
+              <label id="label-dips" for="dips"></label>
+              <input id="dips" type="text" inputmode="numeric" />
+
+              <label id="label-cooper"></label>
+              <div class="cooper">
+                <select id="cooper-min"></select>
+                <span>:</span>
+                <select id="cooper-sec"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="calculate" class="btn primary"></button>
+            <button id="clear" class="btn ghost"></button>
+            <button id="undo" class="btn ghost"></button>
+          </div>
+          <div id="status" class="status"></div>
+        </section>
+
+        <section class="panel results">
+          <div class="results-header">
+            <h2 id="results-title"></h2>
+            <div class="tabs">
+              <button id="tab-results" class="btn ghost"></button>
+              <button id="tab-table" class="btn ghost"></button>
+              <button id="tab-radar" class="btn ghost"></button>
+              <button id="tab-all" class="btn ghost"></button>
+            </div>
+          </div>
+
+          <div class="results-surface">
+            <div id="view-results" class="view">
+              <div id="results-list" class="result-list"></div>
+            </div>
+
+            <div id="view-table" class="view hidden">
+              <div id="table-container"></div>
+            </div>
+
+            <div id="view-radar" class="view hidden">
+              <canvas id="radar" width="640" height="520"></canvas>
+            </div>
+
+            <div id="view-all" class="view hidden">
+              <div id="all-container"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
