@@ -61,12 +61,10 @@ function setOptions(select, values, defaultValue) {
 
 function bindEvents() {
   $("add-player-btn").addEventListener("click", addPlayerToLibrary);
-  $("add-to-match").addEventListener("click", addPlayerToMatch);
-  $("remove-from-match").addEventListener("click", removePlayerFromMatch);
-  $("move-up").addEventListener("click", () => moveMatchPlayer(-1));
-  $("move-down").addEventListener("click", () => moveMatchPlayer(1));
   $("start-btn").addEventListener("click", startGame);
   $("back-btn").addEventListener("click", onBackToSetup);
+  $("player-library-list").addEventListener("click", onSavedPlayerClick);
+  $("match-players-list").addEventListener("click", onMatchPlayerAction);
 
   $("double-btn").addEventListener("click", () => {
     if (state.matchFinished) return;
@@ -122,41 +120,58 @@ function addPlayerToLibrary() {
   renderSetup();
 }
 
-function addPlayerToMatch() {
-  const selected = $("player-library").value;
-  if (!selected) {
-    setSetupStatus("Välj en spelare i listan först.");
-    return;
-  }
+function addPlayerToMatch(name) {
   if (state.matchPlayers.length >= 5) {
     setSetupStatus("Max 5 spelare per match.");
     return;
   }
-  if (state.matchPlayers.includes(selected)) {
+  if (state.matchPlayers.includes(name)) {
     setSetupStatus("Spelaren är redan tillagd i matchen.");
     return;
   }
-  state.matchPlayers.push(selected);
+  state.matchPlayers.push(name);
   setSetupStatus("");
   renderSetup();
 }
 
-function removePlayerFromMatch() {
-  const selected = $("match-players").value;
-  if (!selected) return;
-  state.matchPlayers = state.matchPlayers.filter((name) => name !== selected);
+function removePlayerFromMatch(name) {
+  state.matchPlayers = state.matchPlayers.filter((playerName) => playerName !== name);
   renderSetup();
 }
 
-function moveMatchPlayer(direction) {
-  const selected = $("match-players").value;
-  const index = state.matchPlayers.indexOf(selected);
+function moveMatchPlayerByName(name, direction) {
+  const index = state.matchPlayers.indexOf(name);
   if (index < 0) return;
   const newIndex = index + direction;
   if (newIndex < 0 || newIndex >= state.matchPlayers.length) return;
-  const [name] = state.matchPlayers.splice(index, 1);
-  state.matchPlayers.splice(newIndex, 0, name);
-  renderSetup(name);
+  const [moved] = state.matchPlayers.splice(index, 1);
+  state.matchPlayers.splice(newIndex, 0, moved);
+  renderSetup();
+}
+
+function onSavedPlayerClick(event) {
+  const trigger = event.target.closest("[data-player-name]");
+  if (!trigger) return;
+  addPlayerToMatch(trigger.dataset.playerName);
+}
+
+function onMatchPlayerAction(event) {
+  const removeTrigger = event.target.closest("[data-remove-player]");
+  if (removeTrigger) {
+    removePlayerFromMatch(removeTrigger.dataset.removePlayer);
+    return;
+  }
+
+  const upTrigger = event.target.closest("[data-move-up-player]");
+  if (upTrigger) {
+    moveMatchPlayerByName(upTrigger.dataset.moveUpPlayer, -1);
+    return;
+  }
+
+  const downTrigger = event.target.closest("[data-move-down-player]");
+  if (downTrigger) {
+    moveMatchPlayerByName(downTrigger.dataset.moveDownPlayer, 1);
+  }
 }
 
 function startGame() {
@@ -412,8 +427,8 @@ function render() {
 }
 
 function renderSetup(selectMatchName = "") {
-  renderSelect($("player-library"), state.playerLibrary);
-  renderSelect($("match-players"), state.matchPlayers, selectMatchName);
+  renderSavedPlayersList();
+  renderMatchPlayersList();
 
   $("points").value = String(state.startScore);
   $("checkout").value =
@@ -435,14 +450,48 @@ function setSetupStatus(message) {
   $("setup-status").textContent = message;
 }
 
-function renderSelect(select, values, selected = "") {
-  select.innerHTML = "";
-  values.forEach((value) => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value;
-    if (selected && value === selected) option.selected = true;
-    select.appendChild(option);
+function renderSavedPlayersList() {
+  const container = $("player-library-list");
+  container.innerHTML = "";
+
+  if (!state.playerLibrary.length) {
+    container.innerHTML = '<span class="chip empty">Inga sparade spelare</span>';
+    return;
+  }
+
+  state.playerLibrary.forEach((name) => {
+    const item = document.createElement("button");
+    item.className = "player-item";
+    item.dataset.playerName = name;
+    item.innerHTML = `
+      <span class="player-item-name">${name}</span>
+      <span class="tiny-btn">Lägg till</span>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function renderMatchPlayersList() {
+  const container = $("match-players-list");
+  container.innerHTML = "";
+
+  if (!state.matchPlayers.length) {
+    container.innerHTML = '<span class="chip empty">Inga valda spelare</span>';
+    return;
+  }
+
+  state.matchPlayers.forEach((name, index) => {
+    const item = document.createElement("div");
+    item.className = "player-item";
+    item.innerHTML = `
+      <span class="player-item-name">${index + 1}. ${name}</span>
+      <span class="player-item-actions">
+        <button class="tiny-btn" data-move-up-player="${name}">Upp</button>
+        <button class="tiny-btn" data-move-down-player="${name}">Ner</button>
+        <button class="tiny-btn" data-remove-player="${name}">Ta bort</button>
+      </span>
+    `;
+    container.appendChild(item);
   });
 }
 
