@@ -66,10 +66,7 @@ function bindEvents() {
   $("move-up").addEventListener("click", () => moveMatchPlayer(-1));
   $("move-down").addEventListener("click", () => moveMatchPlayer(1));
   $("start-btn").addEventListener("click", startGame);
-  $("back-btn").addEventListener("click", () => {
-    state.view = "setup";
-    render();
-  });
+  $("back-btn").addEventListener("click", onBackToSetup);
 
   $("double-btn").addEventListener("click", () => {
     if (state.matchFinished) return;
@@ -203,6 +200,24 @@ function startGame() {
   render();
 }
 
+function onBackToSetup() {
+  if (hasUnsavedGameProgress()) {
+    const confirmed = window.confirm(
+      "Spelet sparas inte om du lämnar. Vill du lämna?\n\nJa = Lämna\nNej = Stanna kvar"
+    );
+    if (!confirmed) {
+      return;
+    }
+  }
+  state.view = "setup";
+  render();
+}
+
+function hasUnsavedGameProgress() {
+  if (!state.players.length) return false;
+  return !state.matchFinished;
+}
+
 function parseCheckoutRule(label) {
   if (label === "Double out") return "DOUBLE_OUT";
   if (label === "Master out") return "MASTER_OUT";
@@ -225,7 +240,7 @@ function applyThrow(baseValue) {
     return;
   }
 
-  state.undoStack.push(snapshot());
+  state.undoStack.push(captureGameSnapshot());
 
   const hit = createHit(baseValue, state.selectedMultiplier);
   current.throws.push(hit);
@@ -346,13 +361,13 @@ function undoLastThrow() {
     renderGame();
     return;
   }
-  const snap = state.undoStack.pop();
-  Object.assign(state, JSON.parse(JSON.stringify(snap)));
+  const snapshot = state.undoStack.pop();
+  restoreGameSnapshot(snapshot);
   renderGame();
 }
 
-function snapshot() {
-  return {
+function captureGameSnapshot() {
+  return JSON.parse(JSON.stringify({
     startScore: state.startScore,
     checkoutRule: state.checkoutRule,
     sets: state.sets,
@@ -368,11 +383,25 @@ function snapshot() {
     selectedMultiplier: state.selectedMultiplier,
     players: state.players,
     status: state.status,
-    view: state.view,
-    matchPlayers: state.matchPlayers,
-    playerLibrary: state.playerLibrary,
-    undoStack: state.undoStack,
-  };
+  }));
+}
+
+function restoreGameSnapshot(snapshot) {
+  state.startScore = snapshot.startScore;
+  state.checkoutRule = snapshot.checkoutRule;
+  state.sets = snapshot.sets;
+  state.legs = snapshot.legs;
+  state.mode = snapshot.mode;
+  state.setsTarget = snapshot.setsTarget;
+  state.legsTarget = snapshot.legsTarget;
+  state.currentSet = snapshot.currentSet;
+  state.currentLeg = snapshot.currentLeg;
+  state.currentPlayer = snapshot.currentPlayer;
+  state.pendingBustClear = snapshot.pendingBustClear;
+  state.matchFinished = snapshot.matchFinished;
+  state.selectedMultiplier = snapshot.selectedMultiplier;
+  state.players = snapshot.players;
+  state.status = snapshot.status;
 }
 
 function render() {
@@ -398,6 +427,7 @@ function renderSetup(selectMatchName = "") {
   $("mode").value = state.mode === "BEST_OF" ? "Best of" : "First to";
 
   $("setup-status").textContent = state.setupStatus || "";
+  renderOverviewChips();
 }
 
 function setSetupStatus(message) {
@@ -413,6 +443,29 @@ function renderSelect(select, values, selected = "") {
     option.textContent = value;
     if (selected && value === selected) option.selected = true;
     select.appendChild(option);
+  });
+}
+
+function renderOverviewChips() {
+  renderChipRow($("library-chips"), state.playerLibrary, "Inga sparade spelare");
+  renderChipRow($("match-chips"), state.matchPlayers, "Inga valda spelare");
+}
+
+function renderChipRow(container, names, emptyText) {
+  container.innerHTML = "";
+  if (!names.length) {
+    const empty = document.createElement("span");
+    empty.className = "chip empty";
+    empty.textContent = emptyText;
+    container.appendChild(empty);
+    return;
+  }
+
+  names.forEach((name) => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.textContent = name;
+    container.appendChild(chip);
   });
 }
 
