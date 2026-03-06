@@ -186,6 +186,11 @@ input, select {
   cursor: pointer;
 }
 
+.tiny-btn.danger {
+  background: #3b0a0a;
+  color: #fca5a5;
+}
+
 .setup-overview {
   display: grid;
   gap: 6px;

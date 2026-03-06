@@ -150,9 +150,23 @@ function moveMatchPlayerByName(name, direction) {
 }
 
 function onSavedPlayerClick(event) {
-  const trigger = event.target.closest("[data-player-name]");
-  if (!trigger) return;
-  addPlayerToMatch(trigger.dataset.playerName);
+  const addTrigger = event.target.closest("[data-add-player]");
+  if (addTrigger) {
+    addPlayerToMatch(addTrigger.dataset.addPlayer);
+    return;
+  }
+
+  const deleteTrigger = event.target.closest("[data-delete-player]");
+  if (deleteTrigger) {
+    deletePlayerFromLibrary(deleteTrigger.dataset.deletePlayer);
+  }
+}
+
+function deletePlayerFromLibrary(name) {
+  state.playerLibrary = state.playerLibrary.filter((n) => n !== name);
+  state.matchPlayers = state.matchPlayers.filter((n) => n !== name);
+  savePlayers();
+  renderSetup();
 }
 
 function onMatchPlayerAction(event) {
@@ -460,12 +474,14 @@ function renderSavedPlayersList() {
   }
 
   state.playerLibrary.forEach((name) => {
-    const item = document.createElement("button");
+    const item = document.createElement("div");
     item.className = "player-item";
-    item.dataset.playerName = name;
     item.innerHTML = `
       <span class="player-item-name">${name}</span>
-      <span class="tiny-btn">Lägg till</span>
+      <span class="player-item-actions">
+        <button class="tiny-btn" data-add-player="${name}">Lägg till</button>
+        <button class="tiny-btn danger" data-delete-player="${name}">Radera</button>
+      </span>
     `;
     container.appendChild(item);
   });
