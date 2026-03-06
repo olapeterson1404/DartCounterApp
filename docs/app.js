@@ -528,7 +528,7 @@ function renderGame() {
       : "Straight out";
 
   $("game-title").textContent = String(state.startScore);
-  $("game-subtitle").textContent = `${checkoutLabel} | ${modeLabel} | Set ${state.currentSet} (${state.setsTarget} att vinna) | Leg ${state.currentLeg} (${state.legsTarget} att vinna)`;
+  $("game-subtitle").textContent = `${checkoutLabel} · ${modeLabel} · Set ${state.currentSet}/${state.setsTarget} · Leg ${state.currentLeg}/${state.legsTarget}`;
   $("game-status").textContent = state.status || "";
 
   const board = $("players-board");
@@ -539,7 +539,7 @@ function renderGame() {
     const avg = player.turnsCompleted ? (player.totalRoundPoints / player.turnsCompleted).toFixed(1) : "0.0";
 
     const row = document.createElement("article");
-    row.className = "player-row";
+    row.className = "player-row" + (index === state.currentPlayer && !state.matchFinished ? " active-turn" : "");
 
     const indicator = document.createElement("div");
     indicator.className = "turn-indicator";
